@@ -1,0 +1,12 @@
+.note-containers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.note-container {
+  width: 25rem;
+  height: 8rem;
+  border: 1px solid black;
+}
