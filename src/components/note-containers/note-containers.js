@@ -10,14 +10,12 @@ export default class NoteContainers extends Component {
         notes: []
     };
 
-    componentDidMount() {
-        this.todoData
-        .getAllNotes()
-        .then((notes) => {
-            this.setState ({
-                notes
-        });
-      });
+    async componentDidMount() {
+       const response = await this.todoData.getAllNotes()
+       
+       const results = this.setState({notes: response})
+
+       return results;
     }
    
     render () {
@@ -29,8 +27,8 @@ export default class NoteContainers extends Component {
         <div className='note-containers'>
             {notes.map(note => 
             <div className='note-container'>
-                <span>{note.id}</span> <br />
-                <span>{note.title}</span>
+                <div>{note.id}</div>
+                <div>{note.title}</div>
             </div>
             )}
         </div>
