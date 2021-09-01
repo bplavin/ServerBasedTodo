@@ -12,7 +12,6 @@ export default class NoteContainers extends Component {
 
     async componentDidMount() {
        const response = await this.todoData.getAllNotes()
-       
        const results = this.setState({notes: response})
 
        return results;
@@ -28,9 +27,13 @@ export default class NoteContainers extends Component {
             {notes.map(note => 
             <div className='note-container'>
                 <div>{note.id}</div>
+                <button className='delete-btn'>X</button>
+                <button className='edit-btn'>Edit</button>
                 <div>{note.title}</div>
+                
             </div>
             )}
+            
         </div>
         );
     };
