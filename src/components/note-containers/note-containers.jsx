@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import './note-containers.css';
 import TodoData from "../../service/service";
+import NoteBox from "../create-note-box/create-note-box";
 
 export default class NoteContainers extends Component {
     
@@ -44,21 +45,9 @@ export default class NoteContainers extends Component {
     render () {
         const { notes } = this.state;
 
-        const createNote =  notes.map(note => 
-           <div className='note-container'
-                key={note.id}>
-               <div>{note.id}</div>
-               <button className='delete-btn'
-                       onClick={(id) => this.onBtnDelete(note.id, id)}>
-                X</button>
-               <button className='edit-btn'>Edit</button>
-               <div>{note.title}</div>
-           </div>
-        )
-
         return (
         <div className='note-containers'>
-            { createNote }
+            <NoteBox onBtnDelete={this.onBtnDelete} data={notes}/> 
         </div>
         );
     };

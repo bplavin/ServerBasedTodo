@@ -1,0 +1,27 @@
+.note-container {
+  width: 400px;
+  height: 120px;
+  margin-bottom: 10px;
+  border: 1px solid black;
+  background-color: thistle;
+}
+
+.delete-btn {
+  width: 20px;
+  position: relative;
+  bottom: 21px;
+  left: 379px;
+  background-color: tomato;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.edit-btn {
+  width: 30px;
+  position: relative;
+  bottom: 21px;
+  left: 330px;
+  border: 1px solid black;
+  background-color: yellow;
+  cursor: pointer;
+}
