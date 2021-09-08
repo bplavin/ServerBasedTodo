@@ -13,7 +13,8 @@ export default class NoteContainers extends Component {
         super();
 
         this.state = {
-            notes: []
+            notes: [],
+            editing: false
         };
 
         this.onBtnDelete = (id) => {
@@ -43,13 +44,21 @@ export default class NoteContainers extends Component {
     }
    
     render () {
-        const { notes } = this.state;
+        const { notes, editing } = this.state;
 
+    
         return (
         <div className='note-containers'>
-            <NoteBox onBtnDelete={this.onBtnDelete} data={notes}/> 
+            {notes.map(note =>
+            <NoteBox 
+            data={note}
+            edit={editing}
+            onBtnDelete={this.onBtnDelete} 
+            onBtnEdit={this.onBtnEdit}
+            /> 
+            )}
         </div>
-        );
+        )
+        
     };
 };
- 
