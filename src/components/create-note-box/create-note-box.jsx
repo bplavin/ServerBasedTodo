@@ -15,10 +15,16 @@ export default class NoteBox extends Component {
                editing: true
               });       
         };
+
+        this.editingDone = event => {
+            if (event.key === "Enter") {
+            this.setState({ editing: false })
+          };
+        };
     };
     
     render() {
-        const { data, onBtnDelete} = this.props    
+        const { data, onBtnDelete, setUpdate} = this.props    
         
         const editMode = {};
         editMode.display = 'none';
@@ -30,20 +36,24 @@ export default class NoteBox extends Component {
         
         return (
             <div className='note-container'
-                 key={data.id}>    
-            <div>{data.id}</div>
-            <button className='delete-btn'
+                >
+                <div>{data.id}</div>
+                <button className='delete-btn'
                     onClick={(id) => onBtnDelete(data.id, id)}>
                     X
                 </button>
-            <button className='edit-btn'
+                <button className='edit-btn'
                     onClick={this.obBtnEdit}
                 >Edit
                 </button>
-            <textarea className='text-area'
-                      style={editMode}>
-                </textarea>
-            <div>{data.title}</div>
+                <textarea className='text-area'
+                    style={editMode}
+                    value={data.title}
+                    onChange={e => {
+                        setUpdate(e.target.value, data.id)                            
+                    }}
+                    onKeyDown={this.editingDone}>
+            </textarea><div>{data.title}</div>
             </div>
         );
     };

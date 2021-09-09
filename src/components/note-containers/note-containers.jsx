@@ -30,6 +30,17 @@ export default class NoteContainers extends Component {
                 method: 'DELETE'
             });
         };
+
+        this.setUpdate = (updatedTitle, id) => {
+            this.setState({
+                notes: this.state.notes.map(note => {
+                    if(note.id === id) {
+                        note.title = updatedTitle
+                    }
+                    return note
+                })
+            })
+          };
     };
 
 
@@ -38,17 +49,21 @@ export default class NoteContainers extends Component {
        const results = this.setState({notes: response})
 
        return results;
+
+       
     };
    
     render () {
         const { notes } = this.state;
-
+        
         return (
         <div className='note-containers'>
             {notes.map(note =>
-              <NoteBox 
+              <NoteBox
+                key={note.id}
                 data={note}
                 onBtnDelete={this.onBtnDelete}
+                setUpdate={this.setUpdate}
             /> 
             )}
         </div>
