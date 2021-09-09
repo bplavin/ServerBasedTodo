@@ -13,8 +13,7 @@ export default class NoteContainers extends Component {
         super();
 
         this.state = {
-            notes: [],
-            editing: false
+            notes: []
         };
 
         this.onBtnDelete = (id) => {
@@ -27,13 +26,11 @@ export default class NoteContainers extends Component {
                 };
             });
 
-         
             fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
                 method: 'DELETE'
             });
         };
-
-    }
+    };
 
 
     async componentDidMount() {
@@ -41,24 +38,20 @@ export default class NoteContainers extends Component {
        const results = this.setState({notes: response})
 
        return results;
-    }
+    };
    
     render () {
-        const { notes, editing } = this.state;
+        const { notes } = this.state;
 
-    
         return (
         <div className='note-containers'>
             {notes.map(note =>
-            <NoteBox 
-            data={note}
-            edit={editing}
-            onBtnDelete={this.onBtnDelete} 
-            onBtnEdit={this.onBtnEdit}
+              <NoteBox 
+                data={note}
+                onBtnDelete={this.onBtnDelete}
             /> 
             )}
         </div>
-        )
-        
+        );
     };
 };
