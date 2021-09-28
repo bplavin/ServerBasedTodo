@@ -1,94 +1,88 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import AppHeader from '../app-header/app-header';
-import ListItems from '../list-items/list-items';
-import NoteContainers from '../note-containers/note-containers';
-import TodoData from '../../service/service';
+import AppHeader from "../app-header/app-header";
+import ListItems from "../list-items/list-items";
+import NoteContainers from "../note-containers/note-containers";
+import TodoData from "../../service/service";
 
-import './app.css';
+import "./app.css";
 
 export default class App extends Component {
-
   todoData = new TodoData();
+  maxId = 201;
 
-  
-  async componentDidMount() {
-    const response = await this.todoData.getAllNotes()
-    const results = this.setState({notes: response})
-
-    return results;
- };
-
-  constructor () {
+  constructor() {
     super();
 
     this.state = {
-      notes: []
+      notes: [],
+    };
+  }
+
+  async componentDidMount() {
+    const response = await this.todoData.getAllNotes();
+    const newMap = new Map(response.map((i) => [i.id, i]));
+    const results = this.setState({ notes: newMap });
+
+    return results;
+  }
+
+  //Add note function
+  addNote = (text) => {
+    const newNote = {
+      id: this.maxId++,
+      title: text,
     };
 
-    this.maxId = 201; 
+    this.setState(({ notes }) => {
+      notes.set(newNote.id, newNote);
 
-    //Add note function 
-    this.addNote = (text) => {
-      const newNote = {
-        title: text,
-        id: this.maxId++
+      return {
+        notes: notes,
       };
-
-          this.setState(({notes}) => {
-            const newArr = [
-              ...notes,
-              newNote
-            ];
-
-            return {
-              notes: newArr
-            };
-          });
-        };
-
-    //Delete note function 
-    this.onBtnDelete = (id) => {
-      this.setState(({ notes }) => {
-          const idx = notes.findIndex((el) => el.id === id);
-          const newArr = [...notes.slice(0, idx), ...notes.slice(idx + 1)];
-
-          return {
-              notes: newArr
-          };
-      });
-
-      fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-          method: 'DELETE'
-      });
-
-      //Edit note function
-      this.setUpdate = (updatedTitle, id) => {
-        this.setState({
-            notes: this.state.notes.map(note => {
-                if(note.id === id) {
-                    note.title = updatedTitle
-                }
-                return note
-            })
-        });
-      };
-    };
+    });
   };
 
-  render () {
+  //Delete note function
+  onBtnDelete = (id) => {
+    this.setState(({ notes }) => {
+      notes.delete(id);
+
+      return {
+        notes: notes,
+      };
+    });
+
+    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+      method: "DELETE",
+    });
+  };
+
+  //Edit note function
+  setUpdate = (updatedTitle, id) => {
+    this.setState(({ notes }) => {
+      const note = notes.get(id);
+      note.title = updatedTitle;
+      notes.set(id, note);
+      return {
+        notes: notes,
+      };
+    });
+  };
+
+  render() {
     return (
       <div className="app">
-        <AppHeader onNoteAdded={this.addNote}/>
+        <AppHeader onNoteAdded={this.addNote} />
 
         <NoteContainers
           notes={this.state.notes}
           setUpdate={this.setUpdate}
-          onBtnDelete={this.onBtnDelete} />
+          onBtnDelete={this.onBtnDelete}
+        />
 
         <ListItems />
-        </div>
+      </div>
     );
-  };
-};
-
+  }
+}

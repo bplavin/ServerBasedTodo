@@ -7,15 +7,15 @@ export default class NoteContainers extends Component {
   
     render () {
         const { notes, setUpdate, onBtnDelete } = this.props;
-        
+
         return (
         <div className='note-containers'>
-            {notes.map(note =>
-              <NoteBox
-                key={note.id}
-                data={note}
-                onBtnDelete={onBtnDelete}
-                setUpdate={setUpdate}
+            {Array.from(notes).map(([, note]) => 
+                <NoteBox
+                    key={note.id}
+                    data={note}
+                    onBtnDelete={onBtnDelete}
+                    setUpdate={setUpdate}
                 />
             )}
             

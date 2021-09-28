@@ -2,39 +2,48 @@ import React, { Component } from "react";
 import './create-note-box.css'
 
 export default class NoteBox extends Component {
-    
+
     constructor() {
         super();
 
         this.state = {
-        editing: false
-        };
-
-        this.obBtnEdit = () => {
-            this.setState({
-               editing: true
-              });       
-        };
-
-        this.editingDone = event => {
-            if (event.key === 'Enter') {
-            this.setState({ editing: false })
-          };
+            editing: false,
+            text: ''
         };
     };
-    
+
+    onBtnStartEdit(text) {
+        this.setState({
+            editing: true,
+            text: text
+        });
+    };
+
+    editingDone(event, id) {
+        if (event.key === 'Enter') {
+            this.setState({ editing: false });
+            this.props.setUpdate(this.state.text, id);
+        }
+    };
+
+    onChangeText(text) {
+        this.setState({
+            text: text
+        });
+    }
+
     render() {
-        const { data, onBtnDelete, setUpdate} = this.props    
+        const { data, onBtnDelete } = this.props
 
         const isEditing = !this.state.editing ? <></> :
             <textarea className='text-area'
-                  value={data.title}
-                  onKeyDown={this.editingDone}
-                  onChange={e => {
-                  setUpdate(e.target.value, data.id)                            
+                value={this.state.text}
+                onKeyDown={e => this.editingDone(e, data.id)}
+                onChange={e => {
+                    this.onChangeText(e.target.value)
                 }}>
             </textarea>
-        
+
         return (
             <div className='note-container'>
                 <div>{data.id}</div>
@@ -42,9 +51,8 @@ export default class NoteBox extends Component {
                     onClick={(id) => onBtnDelete(data.id, id)}>
                     X
                 </button>
-                <button className='edit-btn'
-                    onClick={this.obBtnEdit}
-                    >Edit
+                <button className='edit-btn' onClick={e => this.onBtnStartEdit(data.title)}>
+                    Edit
                 </button>
                 {isEditing}
                 <div>{data.title}</div>

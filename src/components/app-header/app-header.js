@@ -10,18 +10,19 @@ export default class AppHeader extends Component {
       text: ''
     };
 
-    this.addNoteText = (e) => {
-      this.setState({
-        text: e.target.value
-      });
-    };
-
-    this.onSubmit = (e) => {
-      e.preventDefault();
-      this.props.onNoteAdded(this.state.text);
-    };
-
   }
+
+  addNoteText = (e) => {
+    this.setState({
+      text: e.target.value
+    });
+  };
+
+  onSubmit = (e) => {
+    e.preventDefault();
+    this.props.onNoteAdded(this.state.text);
+  };
+
 
     render() {
          
