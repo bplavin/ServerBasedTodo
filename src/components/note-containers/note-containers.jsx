@@ -1,64 +1,25 @@
 import React, { Component } from "react";
 import './note-containers.css';
-import TodoData from "../../service/service";
 import NoteBox from "../create-note-box/create-note-box";
 
 export default class NoteContainers extends Component {
     
-    todoData = new TodoData();
-
-   
-
-    constructor() {
-        super();
-
-        this.state = {
-            notes: [],
-            editing: false
-        };
-
-        this.onBtnDelete = (id) => {
-            this.setState(({ notes }) => {
-                const idx = notes.findIndex((el) => el.id === id);
-                const newArr = [...notes.slice(0, idx), ...notes.slice(idx + 1)];
-
-                return {
-                    notes: newArr
-                };
-            });
-
-         
-            fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-                method: 'DELETE'
-            });
-        };
-
-    }
-
-
-    async componentDidMount() {
-       const response = await this.todoData.getAllNotes()
-       const results = this.setState({notes: response})
-
-       return results;
-    }
-   
+  
     render () {
-        const { notes, editing } = this.state;
+        const { notes, setUpdate, onBtnDelete } = this.props;
 
-    
         return (
         <div className='note-containers'>
-            {notes.map(note =>
-            <NoteBox 
-            data={note}
-            edit={editing}
-            onBtnDelete={this.onBtnDelete} 
-            onBtnEdit={this.onBtnEdit}
-            /> 
+            {Array.from(notes).map(([, note]) => 
+                <NoteBox
+                    key={note.id}
+                    data={note}
+                    onBtnDelete={onBtnDelete}
+                    setUpdate={setUpdate}
+                />
             )}
+            
         </div>
-        )
-        
+        );
     };
 };

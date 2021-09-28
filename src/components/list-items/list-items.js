@@ -7,8 +7,7 @@ export default class ListItems extends Component {
         return (
         <div className='list-items'>
           <div className='check-box'>
-            <input type='checkBox'
-                   >
+            <input type='checkBox'>
             </input>
             <p>Name 1</p>
           </div>
