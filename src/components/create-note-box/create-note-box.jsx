@@ -46,7 +46,8 @@ export default class NoteBox extends Component {
 
         return (
             <div className='note-container'>
-                <div>{data.id}</div>
+                <div>#{data.id}</div>
+                <div>User ID: {data.userId}</div>
                 <button className='delete-btn'
                     onClick={(id) => onBtnDelete(data.id, id)}>
                     X
