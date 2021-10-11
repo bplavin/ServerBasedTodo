@@ -4,6 +4,7 @@ import AppHeader from "../app-header/app-header";
 import ListItems from "../list-items/list-items";
 import NoteContainers from "../note-containers/note-containers";
 import TodoData from "../../service/service";
+import SearchForm from "../search-form/search-form";
 
 import "./app.css";
 
@@ -16,15 +17,19 @@ export default class App extends Component {
 
     this.state = {
       notes: [],
+      users: {},
+      text: "",
     };
   }
 
   async componentDidMount() {
     const response = await this.todoData.getAllNotes();
     const newMap = new Map(response.map((i) => [i.id, i]));
-    const results = this.setState({ notes: newMap });
+    this.setState({ notes: newMap });
 
-    return results;
+    const userIds = new Set(response.map((i) => i.userId));
+    this.setState({ users: userIds });
+    console.log(userIds);
   }
 
   //Add note function
@@ -40,6 +45,11 @@ export default class App extends Component {
       return {
         notes: notes,
       };
+    });
+
+    fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      body: JSON.stringify(newNote),
     });
   };
 
@@ -68,20 +78,58 @@ export default class App extends Component {
         notes: notes,
       };
     });
+
+    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(this.state.notes),
+    });
+  };
+
+  searchNotes(notesMap, text) {
+    if (text.length === 0) {
+      return Array.from(notesMap).map(([, note]) => note);
+    }
+    const notes = [];
+    for (let keyValue of notesMap) {
+      const note = keyValue[1];
+      if (note.title.startsWith(text)) {
+        notes.push(note);
+      }
+    }
+    return notes;
+  }
+
+  listItems(data) {
+    let items = [];
+
+    Array.from(data).map((id) => items.push(id));
+
+    return items;
+  }
+
+  onSearchChange = (text) => {
+    this.setState({ text });
   };
 
   render() {
+    const { notes, text, users } = this.state;
+    const filteredNotes = this.searchNotes(notes, text);
+    const userId = this.listItems(users);
+
     return (
       <div className="app">
         <AppHeader onNoteAdded={this.addNote} />
 
         <NoteContainers
-          notes={this.state.notes}
+          notes={filteredNotes}
           setUpdate={this.setUpdate}
           onBtnDelete={this.onBtnDelete}
         />
 
-        <ListItems />
+        <div>
+          <SearchForm searchNotes={this.onSearchChange} />
+          <ListItems usersId={userId} />
+        </div>
       </div>
     );
   }

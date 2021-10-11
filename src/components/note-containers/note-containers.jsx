@@ -3,23 +3,22 @@ import './note-containers.css';
 import NoteBox from "../create-note-box/create-note-box";
 
 export default class NoteContainers extends Component {
-    
-  
-    render () {
+
+    render() {
         const { notes, setUpdate, onBtnDelete } = this.props;
 
         return (
-        <div className='note-containers'>
-            {Array.from(notes).map(([, note]) => 
-                <NoteBox
-                    key={note.id}
-                    data={note}
-                    onBtnDelete={onBtnDelete}
-                    setUpdate={setUpdate}
-                />
-            )}
-            
-        </div>
+            <div className='note-containers'>
+                {notes.map(note =>
+                    <NoteBox
+                        key={note.id}
+                        data={note}
+                        onBtnDelete={onBtnDelete}
+                        setUpdate={setUpdate}
+                    />
+                )}
+
+            </div>
         );
     };
 };
