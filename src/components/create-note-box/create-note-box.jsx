@@ -52,7 +52,7 @@ export default class NoteBox extends Component {
                     onClick={(id) => onBtnDelete(data.id, id)}>
                     X
                 </button>
-                <button className='edit-btn' onClick={e => this.onBtnStartEdit(data.title)}>
+                <button className='edit-btn' onClick={() => this.onBtnStartEdit(data.title)}>
                     Edit
                 </button>
                 {isEditing}

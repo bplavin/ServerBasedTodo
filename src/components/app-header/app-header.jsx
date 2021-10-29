@@ -17,6 +17,7 @@ export default class AppHeader extends Component {
   };
 
   onSubmit = (e) => {
+    e.preventDefault();
     this.props.onNoteAdded(this.state.text);
   };
 

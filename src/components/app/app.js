@@ -17,7 +17,7 @@ export default class App extends Component {
 
     this.state = {
       notes: [],
-      users: {},
+      users: [],
       text: "",
     };
   }
@@ -25,10 +25,8 @@ export default class App extends Component {
   async componentDidMount() {
     const response = await this.todoData.getAllNotes();
     const newMap = new Map(response.map((i) => [i.id, i]));
-    this.setState({ notes: newMap });
-
-    const userIds = new Set(response.map((i) => i.userId));
-    this.setState({ users: userIds });
+    const userIds = new Map(response.map((i) => [i.userId, true]));
+    this.setState({ notes: newMap, users: userIds });
     console.log(userIds);
   }
 
@@ -49,7 +47,7 @@ export default class App extends Component {
 
     fetch("https://jsonplaceholder.typicode.com/posts", {
       method: "POST",
-      body: JSON.stringify(newNote),
+      body: JSON.stringify(this.state.notes),
     });
   };
 
@@ -85,36 +83,37 @@ export default class App extends Component {
     });
   };
 
-  searchNotes(notesMap, text) {
-    if (text.length === 0) {
-      return Array.from(notesMap).map(([, note]) => note);
-    }
+  searchNotes(notesMap, text, users) {
     const notes = [];
-    for (let keyValue of notesMap) {
+    for (const keyValue of notesMap) {
       const note = keyValue[1];
-      if (note.title.startsWith(text)) {
+
+      if (note.title.startsWith(text) && users.get(note.userId)) {
         notes.push(note);
       }
     }
     return notes;
   }
 
-  listItems(data) {
-    let items = [];
-
-    Array.from(data).map((id) => items.push(id));
-
-    return items;
-  }
-
   onSearchChange = (text) => {
     this.setState({ text });
   };
 
+  onCheckboxChange = (id, value) => {
+    console.log(this.state.users);
+    this.setState(({ users }) => {
+      let user = users.get(id);
+      user = !value;
+      users.set(id, user);
+      return {
+        users: users,
+      };
+    });
+  };
+
   render() {
     const { notes, text, users } = this.state;
-    const filteredNotes = this.searchNotes(notes, text);
-    const userId = this.listItems(users);
+    const filteredNotes = this.searchNotes(notes, text, users);
 
     return (
       <div className="app">
@@ -128,7 +127,7 @@ export default class App extends Component {
 
         <div>
           <SearchForm searchNotes={this.onSearchChange} />
-          <ListItems usersId={userId} />
+          <ListItems check={this.onCheckboxChange} userIds={users} />
         </div>
       </div>
     );
